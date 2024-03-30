@@ -1,17 +1,8 @@
 import type { arcCapType } from '../../../types/painterConfig'
+import type CanvasOptsType from '../../../types/CanvasOpts'
 
 import { initText, initArc, initCircle, initRect } from './config'
 import texts from './texts'
-
-interface OptsType {
-
-    // https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently
-    willReadFrequently?: boolean
-
-    alpha?: boolean
-
-    storage?: string
-}
 
 class Painter {
 
@@ -42,6 +33,8 @@ class Painter {
 
         // 圆弧结束端闭合方式，和上一个类似
         "arcEndCap": <arcCapType>'butt'
+    } as {
+        [key: string]: any
     }
 
     private __initConfig = {
@@ -72,7 +65,8 @@ class Painter {
 
     }
 
-    constructor(canvas: HTMLCanvasElement, opts: OptsType = {}, region?: Painter, isPainter = false) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    constructor(canvas: HTMLCanvasElement, opts: CanvasOptsType = {}, region?: Painter, isPainter = false, scaleSize = 1) {
         this.painter = canvas.getContext("2d", opts) as CanvasRenderingContext2D
         this.__region = region
         this.__isPainter = isPainter
@@ -175,7 +169,7 @@ class Painter {
         this.painter.save()
         initText(this.painter, this.__specialConfig, x, y, deg)
 
-        let height = texts(this.painter, contents, width, this.__specialConfig.fontSize * lineHeight, (content, top) => {
+        const height = texts(this.painter, contents, width, this.__specialConfig.fontSize * lineHeight, (content, top) => {
             this.painter.fillText(content, 0, top)
         })
 
@@ -191,7 +185,7 @@ class Painter {
         this.painter.save()
         initText(this.painter, this.__specialConfig, x, y, deg)
 
-        let height = texts(this.painter, contents, width, this.__specialConfig.fontSize * lineHeight, (content, top) => {
+        const height = texts(this.painter, contents, width, this.__specialConfig.fontSize * lineHeight, (content, top) => {
             this.painter.strokeText(content, 0, top)
         })
 
@@ -207,7 +201,7 @@ class Painter {
         this.painter.save()
         initText(this.painter, this.__specialConfig, x, y, deg)
 
-        let height = texts(this.painter, contents, width, this.__specialConfig.fontSize * lineHeight, (content, top) => {
+        const height = texts(this.painter, contents, width, this.__specialConfig.fontSize * lineHeight, (content, top) => {
             this.painter.fillText(content, 0, top)
             this.painter.strokeText(content, 0, top)
         })
@@ -421,7 +415,33 @@ class Painter {
         return this
     }
 
+    // 渲染绘制（uniapp独有）
     draw() { }
+
+    // 绘制图片
+    drawImage(img: CanvasImageSource | string, x: number, y: number, w: number, h: number, isUniapp: boolean = false) {
+        return new Promise((resolve) => {
+            if (this.__region) {
+                this.__region.fillRect(x, y, w, h)
+                resolve({})
+            }
+
+            if (this.__isPainter && this.__onlyRegion) return this
+
+            if (typeof img == 'string' && !isUniapp) {
+                const imgInstance = new Image()
+                imgInstance.onload = () => {
+                    this.painter.drawImage(imgInstance, x, y, w, h)
+                    resolve({})
+                }
+                imgInstance.src = img
+            } else {
+                this.painter.drawImage(img as CanvasImageSource, x, y, w, h)
+                resolve({})
+            }
+
+        })
+    }
 }
 
 export default Painter

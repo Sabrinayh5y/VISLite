@@ -1,18 +1,10 @@
-import type SVGConfigType from "../../../types/SVGConfig"
+import type { default as SVGConfigType, svgElType, svgBoardType } from "../../../types/SVGConfig"
 import type { arcCapType, textAlignType, textBaselineType } from "../../../types/painterConfig"
 
 import { initText, initCircle, initPath, initRect, initArc } from "./config"
 import { toNode, setAttribute, getAttribute, full, fill, stroke } from "./tool"
 import rotate from "../../rotate"
 import { linearGradient, radialGradient } from "./gradient"
-
-// 属性名向下兼容
-let oldAttrName = {
-    "font-size": "fontSize",
-    "font-family": "fontFamily",
-    "arc-start-cap": "arcStartCap",
-    "arc-end-cap": "arcEndCap",
-}
 
 class SVG {
     readonly name: string = "SVG"
@@ -55,11 +47,10 @@ class SVG {
     // 属性设置或获取
     config(params: SVGConfigType) {
         if (typeof params !== "object") {
-            return this.__config[oldAttrName[params] || params]
+            return this.__config[params]
         } else {
-            for (let key in params) {
-                let _key = oldAttrName[key] || key
-                this.__config[_key] = params[key]
+            for (const key in params) {
+                this.__config[key] = params[key]
             }
         }
         return this
@@ -86,7 +77,7 @@ class SVG {
     // el可以是结点或字符串，字符串的话表示节点名称
     // context可选，表示追加位置，可选，默认根svg
     // 此外，和appendBoard等操作一样，执行后新加入的结点会自动变成应用节点
-    appendEl(el: string | SVGElement, context?: SVGElement) {
+    appendEl(el: svgElType, context?: SVGElement) {
         context = context || this.__svg
 
         if (typeof el == "string") el = toNode(el)
@@ -99,8 +90,8 @@ class SVG {
     // 追加绘制板
     // 参数和appendEl类似，只是el如果是字符串的话，表示需要绘制对应什么内容，
     // 比如el = “arc”，表示画弧（不是路径arc），那么我们会创建path节点，因为我们是使用path实现的
-    appendBoard(el: string | SVGElement, context?: SVGElement) {
-        let _el = el
+    appendBoard(el: svgBoardType, context?: SVGElement) {
+        let _el: svgBoardType | string = el
 
         if (typeof el == "string")
             _el =
@@ -113,7 +104,7 @@ class SVG {
                 }[el] || ""
 
         if (_el == "") throw new Error("Unsupported drawing method:" + el)
-        return this.appendEl(_el, context)
+        return this.appendEl(_el as svgElType, context)
     }
 
     // 删除当前维护的节点
@@ -136,7 +127,7 @@ class SVG {
         if (typeof params !== "object") {
             return getAttribute(this.__useEl, params)
         } else {
-            for (let key in params) {
+            for (const key in params) {
                 setAttribute(this.__useEl, key, params[key])
             }
             return this
@@ -280,8 +271,8 @@ class SVG {
     }
 
     arc(x: number, y: number, r: number, beginDeg: number, deg: number) {
-        let begPosition = rotate(x, y, (beginDeg / 180) * Math.PI, x + r, y)
-        let endPosition = rotate(
+        const begPosition = rotate(x, y, (beginDeg / 180) * Math.PI, x + r, y)
+        const endPosition = rotate(
             x,
             y,
             ((beginDeg + deg) / 180) * Math.PI,

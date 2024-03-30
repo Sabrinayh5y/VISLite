@@ -12,14 +12,15 @@ class Canvas extends OralCanvas implements CanvasType {
         }
 
         option = mergeOption(option, {
-            region: true
+            region: true,
+            willReadFrequently: false
         })
 
-        let width = el.clientWidth, height = el.clientHeight
+        const width = el.clientWidth, height = el.clientHeight
 
-        let ViewCanvas: HTMLCanvasElement, RegionCanvas: HTMLCanvasElement
+        let ViewCanvas: HTMLCanvasElement, RegionCanvas: HTMLCanvasElement | null = null
 
-        let _el = el as any
+        const _el = el as any
 
         // 如果已经初始化过了
         if (_el._vislite_canvas_) {
@@ -42,20 +43,24 @@ class Canvas extends OralCanvas implements CanvasType {
         }
 
         // 设置画布大小
-        for (let canvas of [ViewCanvas, RegionCanvas]) {
-
+        const canvasArray = [RegionCanvas, ViewCanvas]
+        for (let index = 0; index < canvasArray.length; index++) {
+            const canvas = canvasArray[index]
             if (canvas) {
                 canvas.style.width = width + "px"
-                canvas.setAttribute('width', width + "")
+                canvas.setAttribute('width', (index * width + width) + "")
 
                 canvas.style.height = height + "px"
-                canvas.setAttribute('height', height + "")
+                canvas.setAttribute('height', (index * height + height) + "")
             }
         }
 
-        super(ViewCanvas, RegionCanvas)
+        super(ViewCanvas, RegionCanvas, {
+            willReadFrequently: option.willReadFrequently,
+        }, 2)
 
         this.__canvas = ViewCanvas
+        this.painter.scale(2, 2)
     }
 
     toDataURL(): Promise<string> {

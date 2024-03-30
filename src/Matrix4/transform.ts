@@ -3,7 +3,7 @@
  * 计算出两个变换矩阵
  * 分别为：任意射线变成OZ轴变换矩阵 + OZ轴变回原来的射线的变换矩阵
  */
-export default function (a1: number, b1: number, c1: number, a2: number, b2: number, c2: number) {
+export default function (a1: number, b1: number, c1?: number, a2?: number, b2?: number, c2?: number) {
 
     if (typeof a1 === 'number' && typeof b1 === 'number') {
 
@@ -28,7 +28,7 @@ export default function (a1: number, b1: number, c1: number, a2: number, b2: num
 
         if (a1 == a2 && b1 == b2 && c1 == c2) throw new Error('It\'s not a legitimate ray!')
 
-        let sqrt1 = Math.sqrt((a2 - a1) * (a2 - a1) + (b2 - b1) * (b2 - b1)),
+        const sqrt1 = Math.sqrt((a2 - a1) * (a2 - a1) + (b2 - b1) * (b2 - b1)),
             cos1 = sqrt1 != 0 ? (b2 - b1) / sqrt1 : 1,
             sin1 = sqrt1 != 0 ? (a2 - a1) / sqrt1 : 0,
 

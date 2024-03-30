@@ -123,7 +123,7 @@ v0.5.0:
       - 优化改造
         1、一些types定义优化（比如 Array<number> 改成更具体的 [number, number] 类型）
       - 新增功能
-        1、Geometry 几何体运算
+        1、Geometry 立方体
             * cylinder 圆柱体
             * prism 棱柱体
             * sphere 球体
@@ -141,3 +141,84 @@ v0.5.2:
         3、SVG画笔
             * createLinearGradient 线性渐变色
             * createRadialGradient 环形渐变色
+v0.6.0:
+    date:2023-12-17
+    changes:
+      - 修复bug
+        1、修复ruler值出现浮点“不精确”问题
+      - 优化改造
+        1、uni-app平台的ui-canvas明确为inline-block盒子
+        2、开发环境添加了eslint
+      - 新增功能
+        1、Canvas画笔
+            * getInfo 获取画布信息
+            * H5环境下创建的时候添加willReadFrequently配置
+        2、Matrix4 变换矩阵
+            * setValue 设置内置矩阵
+v0.7.0:
+    date:2024-01-14
+    changes:
+      - 修复bug
+        1、修复ui-canvas在HBuilderX中使用“发行”打包成H5后css代码未生效问题
+          （这应该是HBuilderX自身的BUG，但为了快速修复，内部消化）
+      - 优化改造
+        1、一些types定义优化
+            * 针对svg新增：svgElType、svgBoardType
+        2、Geometry 立方体运算
+            * 针对 “prism 棱柱体” 和 “cylinder 圆柱体” 新增直接设置起终点方式
+            * 给拼接成立方体的每个小片定义一个名称
+        3、开启严格模式并进行相关代码调整
+          （使得更多问题提前暴露出来，提高代码质量）
+v0.7.1:
+    date:2024-01-20
+    changes:
+      - 修复bug
+        1、修复types中类型定义错误
+            * Object3D.d.ts中LINE_STRIP被误写成INE_STRIP
+      - 优化改造
+        1、提高Canvas绘图清晰度
+            * 普通H5端
+            * uni-app端（支付宝小程序）
+v0.8.0:
+    date:2024-03-02
+    changes:
+      - 修复bug
+        1、修复“prism 棱柱体” 和 “cylinder 圆柱体”特殊情况下计算错误
+            * 未考虑方向无需调整时分母为零
+            * 未考虑计算的高需要判断正负性
+        2、修复同一个Canvas多次获取画笔会获取错误问题
+      - 优化改造
+        1、针对单独引入的方式添加types支持
+        2、一些types定义优化
+            * 针对ui-canvas补充标签ref类型
+      - 新增功能
+        1、针对3D模型扩展了一个在线编辑器
+          （ https://zxl20070701.github.io/toolbox/#/model-editor ）
+        2、Canvas画笔
+            * drawImage 绘制图片
+        3、WebGL画笔
+            * 画布缩放模式（mode）
+        4、Geometry 辅助方法
+            * splitNum 计算切割份数
+            * rotateLine 物体方向转换
+        5、Geometry 立方片段
+            * prismHorizontal 棱柱水平部分
+            * prismVertical 棱柱垂直部分
+            * sphereFragment 球体中的一瓣子
+        6、Geometry 立方体
+            * pie 饼柱体
+v1.0.0:
+    date:
+    changes:
+      - 被废弃API或功能
+        （基于更长远的考虑，部分反馈不好的API决定从v1.x开始废弃，后续专注基础技术积累，废弃业务模块，原v0.x的功能将独立一个分支继续维护，敬请理解）
+        1、Geometry 立方体
+        2、WebGL画笔
+        3、取消一些旧的向下兼容语句
+            * 微信小程序组件ui-canvas作为属性传递事件方式
+            * Canvas和SVG画笔配置属性key非驼峰方式
+        4、viewHandler 节点信息捕获
+        5、formatColor 颜色格式化
+      - 优化改造
+        1、针对types文件丰富必要的注释
+        2、微信小程序和uni-app组件ui-canvas使用主包canvas以减低最终包体积

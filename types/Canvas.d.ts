@@ -260,7 +260,15 @@ export default interface CanvasType {
      * 获取原生画笔
      * @param isRegion 是否是区域
      */
-    getContext(isRegion?: boolean): CanvasRenderingContext2D
+    getContext(isRegion?: boolean): CanvasRenderingContext2D | null
+
+    /**
+     * 获取画布信息
+     */
+    getInfo(): {
+        width: number
+        height: number
+    }
 
     /**
      * 创建线性渐变
@@ -297,4 +305,14 @@ export default interface CanvasType {
      * @param callback 绘制完成后回调
      */
     draw(reserve?: boolean, callback?: Function): void
+
+    /**
+     * 绘制图片
+     * @param img 需要绘制的图片
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     */
+    drawImage(img: CanvasImageSource | string, x: number, y: number, w: number, h: number, isUniapp?: boolean): Promise<any>
 }

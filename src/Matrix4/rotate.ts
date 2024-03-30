@@ -1,10 +1,10 @@
 /**
- * 围绕0Z轴旋转
+ * 围绕OZ轴旋转
  * 其它的旋转可以借助transform实现
  * 旋转角度单位采用弧度制
  */
 export default function (deg: number) {
-    let sin = Math.sin(deg),
+    const sin = Math.sin(deg),
         cos = Math.cos(deg)
     return [
         cos, sin, 0, 0,

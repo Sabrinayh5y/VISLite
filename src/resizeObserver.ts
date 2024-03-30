@@ -1,6 +1,7 @@
 let observer: ResizeObserver
 
-let attrValueToCallback = {}, uniqueid = 0
+const attrValueToCallback = {}
+let uniqueid = 0
 
 export default function (el: HTMLElement | null, callback: Function) {
 
@@ -19,11 +20,11 @@ export default function (el: HTMLElement | null, callback: Function) {
         (el as any)._resize_observer_ = uniqueid
         attrValueToCallback[uniqueid] = callback
 
-        observer.observe(el)
+        observer.observe(el as HTMLElement)
 
         return function () {
             if (observer) {
-                observer.unobserve(el)
+                observer.unobserve(el as HTMLElement)
                 delete attrValueToCallback[(el as any)._resize_observer_]
             }
         }

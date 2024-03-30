@@ -306,11 +306,29 @@ painter.config({
 </h3>
 <pre tag="javascript">painter.clearRect(x, y, w, h)</pre>
 <h3>
+    drawImage
+</h3>
+<div class="version">
+    0.8.0 新增
+</div>
+<p>
+    绘制图片到画布：
+</p>
+<pre tag="javascript">painter.drawImage(img, x, y, w, h).then(()=>{
+    // todo
+})</pre>
+<p>
+    其中img表示需要绘制的图片，可以是Image对象或url；(x,y)表示图片绘制到的位置，w和h分别表示绘制位置的宽和高。
+</p>
+<h3>
     toDataURL
 </h3>
 <div class="version">
     0.2.0 新增
 </div>
+<p>
+    获取画布的base64地址：
+</p>
 <pre tag="javascript">painter.toDataURL().then(url=>{
     // todo
 })</pre>
@@ -324,7 +342,28 @@ painter.config({
     获取画布上指定位置的颜色：
 </p>
 <pre tag="javascript">
-    var rgba = getColor(x, y)
+    var rgba = painter.getColor(x, y)
+</pre>
+<h3>
+    getInfo
+</h3>
+<div class="version">
+    0.6.0 新增
+</div>
+<p>
+    获取画布信息：
+</p>
+<pre tag="javascript">
+    var info = painter.getInfo()
+</pre>
+<p>
+    返回信息info格式如下：
+</p>
+<pre tag="javascript">
+{
+    width: number // 画布的宽
+    height: number // 画布的高
+}
 </pre>
 <h2>
     区域管理
